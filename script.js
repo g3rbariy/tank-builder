@@ -131,3 +131,38 @@ document.addEventListener('keydown', (e) => {
   });
   if (inputBuffer.length > 20) inputBuffer = "";
 });
+  // Додаємо цю функцію в будь-яке місце вашого script.js
+function createSparks(event) {
+  const button = event.currentTarget;
+  const rect = button.getBoundingClientRect();
+  
+  // Створюємо 10 іскр
+  for (let i = 0; i < 10; i++) {
+    const spark = document.createElement('div');
+    spark.classList.add('spark');
+    
+    // Випадкові позиції навколо точки кліку
+    const x = event.clientX - rect.left + (Math.random() - 0.5) * 20;
+    const y = event.clientY - rect.top + (Math.random() - 0.5) * 20;
+    
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    
+    // Випадковий розмір та колір
+    const size = Math.random() * 3 + 2;
+    spark.style.width = `${size}px`;
+    spark.style.height = `${size}px`;
+    spark.style.background = `hsl(${Math.random() * 30 + 30}, 100%, 50%)`;
+    
+    button.appendChild(spark);
+    
+    // Видаляємо іскру після анімації
+    setTimeout(() => {
+      spark.remove();
+    }, 500);
+  }
+}
+
+// Додаємо обробник подій до кнопки
+document.querySelector('button[type="submit"]').addEventListener('mousedown', createSparks);
+document.getElementById('randomTank').addEventListener('mousedown', createSparks);
