@@ -3,7 +3,42 @@ const output = document.getElementById('output');
 const button = form.querySelector('button');
 const buildSound = new Audio('build.mp3');
 
+const tips = [
+  "Порада: ТТ краще використовувати для утримання напрямків",
+  "Факт: САУ можуть завдавати урон через всю карту",
+  "Підказка: СТ ефективні в кінці бою",
+  "Знаєте що: У ПТ-САУ найвищий урон у грі",
+  "Порада: Вивчіть слабкі місця танків супротивника"
+];
+
+const tankEmojis = {
+  "СРСР": { "ТТ": "🇷🇺🐘", "СТ": "🇷🇺⚡", "ПТ-САУ": "🇷🇺🎯", "САУ": "🇷🇺☄️" },
+  "Німеччина": { "ТТ": "🇩🇪🦏", "СТ": "🇩🇪🐆", "ПТ-САУ": "🇩🇪🏹", "САУ": "🇩🇪💥" },
+  "США": { "ТТ": "🇺🇸🦅", "СТ": "🇺🇸⚡", "ПТ-САУ": "🇺🇸🎯", "САУ": "🇺🇸☄️" },
+  "Франція": { "ТТ": "🇫🇷🐓", "СТ": "🇫🇷🏎", "ПТ-САУ": "🇫🇷🏹", "САУ": "🇫🇷💥" }
+};
+
+const tankDescriptions = {
+  "ТТ": "Важкий танк - сталева стіна!",
+  "СТ": "Швидкий та маневрений",
+  "ПТ-САУ": "Смерть здалеку",
+  "САУ": "Арта готова до удару!"
+};
+
+// Випадкова підказка при завантаженні
 document.getElementById('tips').textContent = tips[Math.floor(Math.random() * tips.length)];
+
+// Оновлення прев'ю при зміні класу
+document.getElementById('class').addEventListener('change', function() {
+  const nation = document.getElementById('nation').value;
+  const tankClass = this.value;
+  if (nation && tankClass && tankEmojis[nation]?.[tankClass]) {
+    document.getElementById('tankModel').textContent = tankEmojis[nation][tankClass];
+    document.getElementById('tankDescription').textContent = tankDescriptions[tankClass];
+  }
+});
+
+// Обробка форми
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -12,23 +47,35 @@ form.addEventListener('submit', function(e) {
   const tankClass = document.getElementById('class').value;
   const name = document.getElementById('name').value;
   const modules = document.getElementById('modules').value;
-  const tips = [
-  "Совет: ТТ лучше использовать для удержания направлений",
-  "Факт: САУ могут наносить урон через всю карту",
-  "Подсказка: СТ эффективны в конце боя",
-  "Знаете ли вы: У ПТ-САУ самый высокий урон в игре",
-  "Совет: Изучите слабые места танков противника"
-];
 
-document.getElementById('tips').textContent = tips[Math.floor(Math.random() * tips.length)];
   // Ефект "збирання"
   button.disabled = true;
   button.innerHTML = 'Збирається... 🔧';
-  buildSound.currentTime = 0; // почати з початку
+  buildSound.currentTime = 0;
   buildSound.play();
 
-  // Через 2 секунди — показ результату
+  // Додаємо ефект трясіння
+  document.querySelector('.container').classList.add('shake');
+
+  // Прогрес-бар
+  document.getElementById('progressContainer').style.display = 'block';
+  const progressBar = document.getElementById('progressBar');
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress += 5;
+    progressBar.style.width = progress + '%';
+    if (progress >= 100) clearInterval(progressInterval);
+  }, 100);
+
+  // Через 2 секунди - показ результату
   setTimeout(() => {
+    // Зупиняємо ефекти
+    clearInterval(progressInterval);
+    document.querySelector('.container').classList.remove('shake');
+    document.getElementById('progressContainer').style.display = 'none';
+    progressBar.style.width = '0%';
+
+    // Показуємо результат
     output.style.display = 'block';
     output.innerHTML = `
       <strong>✅ Танк зібрано!</strong><br><br>
@@ -36,9 +83,51 @@ document.getElementById('tips').textContent = tips[Math.floor(Math.random() * ti
       <b>Клас:</b> ${tankClass}<br>
       <b>Назва:</b> ${name}<br>
       <b>Модулі:</b><br>${modules.replace(/\n/g, '<br>')}
+      <div style="margin-top: 15px; font-size: 0.8em;">Цікавинка: ${tips[Math.floor(Math.random()*tips.length)]}</div>
     `;
 
     button.disabled = false;
     button.innerHTML = 'Зібрати танк';
   }, 2000);
+});
+
+// Випадковий танк
+document.getElementById('randomTank').addEventListener('click', function() {
+  const nations = ["СРСР", "Німеччина", "США", "Франція"];
+  const classes = ["ТТ", "СТ", "ПТ-САУ", "САУ"];
+  const names = {
+    "СРСР": ["Т-34", "ІС-7", "СУ-100", "Об'єкт 268"],
+    "Німеччина": ["Tiger II", "Leopard 1", "Jagdpanther", "GW Tiger"],
+    "США": ["Maus", "Sherman", "T95", "T92 HMC"],
+    "Франція": ["AMX 50B", "Bat.-Châtillon 25 t", "AMX 50 Foch", "Bat.-Châtillon 155"]
+  };
+  
+  const randomNation = nations[Math.floor(Math.random()*nations.length)];
+  const randomClass = classes[Math.floor(Math.random()*classes.length)];
+  
+  document.getElementById('nation').value = randomNation;
+  document.getElementById('class').value = randomClass;
+  document.getElementById('name').value = names[randomNation][Math.floor(Math.random()*names[randomNation].length)];
+  
+  // Оновлюємо прев'ю
+  document.getElementById('class').dispatchEvent(new Event('change'));
+});
+
+// Секретні коди
+const secretCodes = {
+  "idqd": "Безсмертя увімкнено!",
+  "idkfa": "Повне озброєння",
+  "tiger": "Тигр у твоїх руках!"
+};
+
+let inputBuffer = "";
+document.addEventListener('keydown', (e) => {
+  inputBuffer += e.key.toLowerCase();
+  Object.keys(secretCodes).forEach(code => {
+    if (inputBuffer.endsWith(code)) {
+      alert(secretCodes[code]);
+      inputBuffer = "";
+    }
+  });
+  if (inputBuffer.length > 20) inputBuffer = "";
 });
