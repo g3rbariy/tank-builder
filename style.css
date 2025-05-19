@@ -50,6 +50,11 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
 
     .output {
       margin-top: 20px;
