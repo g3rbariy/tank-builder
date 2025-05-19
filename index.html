@@ -3,29 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Збирач Танків</title>
+  <title>Конструктор Танків</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="tank_icon.png" type="image/png">
 </head>
 <body>
 
   <!-- 🎥 Відеофон -->
   <video class="video-bg" autoplay muted loop>
     <source src="wot_background.mp4" type="video/mp4">
-    Ваш браузер не підтримує відео фон.
+    Ваш браузер не підтримує відеофон.
   </video>
 
-  <!-- 📦 Контейнер -->
-  <div id="tankPreview" style="text-align: center; margin: 20px 0;">
-  <div id="tankModel" style="font-size: 100px;">🤖</div>
-  <div id="tankDescription" style="font-style: italic;"></div>
-  </div>
-  <div id="tips" style="margin-top: 20px; font-style: italic; font-size: 0.9em;"></div>
+  <!-- 📦 Основний контейнер -->
   <div class="container">
-    <h2>Збирач Танків</h2>
+    <h2>Конструктор Танків</h2>
+    
+    <!-- 🎮 Панель попереднього перегляду -->
+    <div id="tankPreview" class="tank-preview">
+      <div id="tankModel" class="tank-model">🤖</div>
+      <div id="tankDescription" class="tank-description"></div>
+    </div>
+    
+    <!-- 💡 Випадкова підказка -->
+    <div id="tips" class="tips"></div>
+    
+    <!-- 📝 Форма створення танка -->
     <form id="tankForm">
-      <label for="nation">Нація</label>
+      <label for="nation">Нація:</label>
       <select id="nation" required>
-        <option value="">-- Оберіть --</option>
+        <option value="">-- Оберіть націю --</option>
         <option value="СРСР">🇷🇺 СРСР</option>
         <option value="Німеччина">🇩🇪 Німеччина</option>
         <option value="США">🇺🇸 США</option>
@@ -38,25 +45,36 @@
         <option value="Польща">🇵🇱 Польща</option>
       </select>
 
-      <label for="class">Клас техніки</label>
+      <label for="class">Клас техніки:</label>
       <select id="class" required>
-        <option value="">-- Оберіть --</option>
-        <option value="САУ">🟢 САУ</option>
-        <option value="ПТ-САУ">🔵 ПТ-САУ</option>
-        <option value="ТТ">🔴 ТТ</option>
-        <option value="СТ">🟡 СТ</option>
+        <option value="">-- Оберіть клас --</option>
+        <option value="САУ">🟢 САУ (Самохідна артилерійська установка)</option>
+        <option value="ПТ-САУ">🔵 ПТ-САУ (Протитанкова самохідка)</option>
+        <option value="ТТ">🔴 ТТ (Тяжкий танк)</option>
+        <option value="СТ">🟡 СТ (Середній танк)</option>
       </select>
 
-      <label for="name">Назва танка</label>
-      <input type="text" id="name" required />
+      <label for="name">Назва танка:</label>
+      <input type="text" id="name" placeholder="Введіть назву танка" required />
 
-      <label for="modules">Модулі</label>
-      <textarea id="modules" rows="4" placeholder="Наприклад: гармата, двигун, башта..."></textarea>
+      <label for="modules">Модулі та обладнання:</label>
+      <textarea id="modules" rows="4" placeholder="Наприклад: 122-мм гармата Д-25Т, дизельний двигун В-2, броня 120 мм..."></textarea>
 
-      <button type="submit">Зібрати танк</button>
+      <div class="buttons">
+        <button type="submit">Зібрати танк</button>
+        <button type="button" id="randomTank">Випадковий танк</button>
+      </div>
     </form>
 
-    <div class="output" id="output" style="display:none;"></div>
+    <!-- 🏗️ Прогрес-бар збирання -->
+    <div id="progressContainer" class="progress-container">
+      <div class="progress-bar">
+        <div id="progressBar" class="progress"></div>
+      </div>
+    </div>
+
+    <!-- 📊 Результат збирання -->
+    <div class="output" id="output"></div>
   </div>
 
   <script src="script.js"></script>
