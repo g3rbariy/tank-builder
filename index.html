@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Сборщик Танков</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 20px;
+      background: #eef;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Сборщик Танков</h2>
+    <form id="tankForm">
+      <label for="nation">Нация</label>
+      <select id="nation" required>
+        <option value="">-- Выберите --</option>
+        <option>СССР</option>
+        <option>Германия</option>
+        <option>США</option>
+        <option>Франция</option>
+        <option>Китай</option>
+        <option>Япония</option>
+        <option>Италия</option>
+        <option>Чехия</option>
+        <option>Швеция</option>
+        <option>Польша</option>
+      </select>
+
+      <label for="class">Класс техники</label>
+      <select id="class" required>
+        <option value="">-- Выберите --</option>
+        <option>САУ</option>
+        <option>ПТ-САУ</option>
+        <option>ТТ</option>
+        <option>СТ</option>
+      </select>
+
+      <label for="name">Название танка</label>
+      <input type="text" id="name" required />
+
+      <label for="modules">Модули</label>
+      <textarea id="modules" rows="4" placeholder="Например: орудие, двигатель, башня..."></textarea>
+
+      <button type="submit">Собрать танк</button>
+    </form>
+
+    <div class="output" id="output" style="display:none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('tankForm');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nation = document.getElementById('nation').value;
+      const tankClass = document.getElementById('class').value;
+      const name = document.getElementById('name').value;
+      const modules = document.getElementById('modules').value;
+
+      output.style.display = 'block';
+      output.innerHTML = `
+        <strong>Результат:</strong><br>
+        <b>Нация:</b> ${nation}<br>
+        <b>Класс:</b> ${tankClass}<br>
+        <b>Название:</b> ${name}<br>
+        <b>Модули:</b> ${modules.replace(/\n/g, '<br>')}
+      `;
+    });
+  </script>
+</body>
+</html>
