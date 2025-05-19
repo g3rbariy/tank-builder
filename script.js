@@ -1,6 +1,7 @@
 const form = document.getElementById('tankForm');
 const output = document.getElementById('output');
 const button = form.querySelector('button');
+const buildSound = new Audio('build.mp3');
 
 form.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -14,6 +15,8 @@ form.addEventListener('submit', function(e) {
   // Ефект "збирання"
   button.disabled = true;
   button.innerHTML = 'Збирається... 🔧';
+  buildSound.currentTime = 0; // почати з початку
+  buildSound.play();
 
   // Через 2 секунди — показ результату
   setTimeout(() => {
