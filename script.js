@@ -3,6 +3,7 @@ const output = document.getElementById('output');
 const button = form.querySelector('button');
 const buildSound = new Audio('build.mp3');
 
+document.getElementById('tips').textContent = tips[Math.floor(Math.random() * tips.length)];
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -11,7 +12,15 @@ form.addEventListener('submit', function(e) {
   const tankClass = document.getElementById('class').value;
   const name = document.getElementById('name').value;
   const modules = document.getElementById('modules').value;
+  const tips = [
+  "Совет: ТТ лучше использовать для удержания направлений",
+  "Факт: САУ могут наносить урон через всю карту",
+  "Подсказка: СТ эффективны в конце боя",
+  "Знаете ли вы: У ПТ-САУ самый высокий урон в игре",
+  "Совет: Изучите слабые места танков противника"
+];
 
+document.getElementById('tips').textContent = tips[Math.floor(Math.random() * tips.length)];
   // Ефект "збирання"
   button.disabled = true;
   button.innerHTML = 'Збирається... 🔧';
