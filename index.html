@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Сборщик Танков</title>
+  <title>Збирач Танків</title>
   <style>
     body, html {
       margin: 0;
@@ -40,7 +40,7 @@
       margin-top: 15px;
     }
 
-    input, select, textarea {
+    select, input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -64,51 +64,67 @@
       padding: 15px;
       border-radius: 5px;
     }
+
+    .flag-icon, .class-icon {
+      width: 20px;
+      height: 14px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    .icon-label {
+      display: flex;
+      align-items: center;
+    }
+
+    option {
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 🎥 Видеофон -->
+  <!-- 🎥 Відеофон -->
   <video class="video-bg" autoplay muted loop>
     <source src="wot_background.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео фон.
+    Ваш браузер не підтримує відео фон.
   </video>
 
   <!-- 📦 Контейнер -->
   <div class="container">
-    <h2>Сборщик Танков</h2>
+    <h2>Збирач Танків</h2>
     <form id="tankForm">
-      <label for="nation">Нация</label>
+      <label for="nation">Нація</label>
       <select id="nation" required>
-        <option value="">-- Выберите --</option>
-        <option>СССР</option>
-        <option>Германия</option>
-        <option>США</option>
-        <option>Франция</option>
-        <option>Китай</option>
-        <option>Япония</option>
-        <option>Италия</option>
-        <option>Чехия</option>
-        <option>Швеция</option>
-        <option>Польша</option>
+        <option value="">-- Оберіть --</option>
+        <option value="СРСР">🇷🇺 СРСР</option>
+        <option value="Німеччина">🇩🇪 Німеччина</option>
+        <option value="США">🇺🇸 США</option>
+        <option value="Франція">🇫🇷 Франція</option>
+        <option value="Китай">🇨🇳 Китай</option>
+        <option value="Японія">🇯🇵 Японія</option>
+        <option value="Італія">🇮🇹 Італія</option>
+        <option value="Чехія">🇨🇿 Чехія</option>
+        <option value="Швеція">🇸🇪 Швеція</option>
+        <option value="Польща">🇵🇱 Польща</option>
       </select>
 
-      <label for="class">Класс техники</label>
+      <label for="class">Клас техніки</label>
       <select id="class" required>
-        <option value="">-- Выберите --</option>
-        <option>САУ</option>
-        <option>ПТ-САУ</option>
-        <option>ТТ</option>
-        <option>СТ</option>
+        <option value="">-- Оберіть --</option>
+        <option value="САУ">🟢 САУ</option>
+        <option value="ПТ-САУ">🔵 ПТ-САУ</option>
+        <option value="ТТ">🔴 ТТ</option>
+        <option value="СТ">🟡 СТ</option>
       </select>
 
-      <label for="name">Название танка</label>
+      <label for="name">Назва танка</label>
       <input type="text" id="name" required />
 
-      <label for="modules">Модули</label>
-      <textarea id="modules" rows="4" placeholder="Например: орудие, двигатель, башня..."></textarea>
+      <label for="modules">Модулі</label>
+      <textarea id="modules" rows="4" placeholder="Наприклад: гармата, двигун, башта..."></textarea>
 
-      <button type="submit">Собрать танк</button>
+      <button type="submit">Зібрати танк</button>
     </form>
 
     <div class="output" id="output" style="display:none;"></div>
@@ -128,10 +144,10 @@
       output.style.display = 'block';
       output.innerHTML = `
         <strong>Результат:</strong><br>
-        <b>Нация:</b> ${nation}<br>
-        <b>Класс:</b> ${tankClass}<br>
-        <b>Название:</b> ${name}<br>
-        <b>Модули:</b> ${modules.replace(/\n/g, '<br>')}
+        <b>Нація:</b> ${nation}<br>
+        <b>Клас:</b> ${tankClass}<br>
+        <b>Назва:</b> ${name}<br>
+        <b>Модулі:</b> ${modules.replace(/\n/g, '<br>')}
       `;
     });
   </script>
