@@ -52,15 +52,23 @@ function createSparks(event) {
     const spark = document.createElement('div');
     spark.classList.add('spark');
     
-    const x = event.clientX - rect.left + (Math.random() - 0.5) * 30;
-    const y = event.clientY - rect.top + (Math.random() - 0.5) * 30;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * 30 + 20;
+    const sparkX = Math.cos(angle) * distance;
+    const sparkY = Math.sin(angle) * distance;
     
     spark.style.left = `${x}px`;
     spark.style.top = `${y}px`;
-    spark.style.width = `${Math.random() * 4 + 2}px`;
-    spark.style.height = spark.style.width;
+    spark.style.setProperty('--spark-x', `${sparkX}px`);
+    spark.style.setProperty('--spark-y', `${sparkY}px`);
+    
+    const size = Math.random() * 4 + 3;
+    spark.style.width = `${size}px`;
+    spark.style.height = `${size}px`;
     spark.style.background = `hsl(${Math.random() * 60 + 20}, 100%, 50%)`;
-    spark.style.animationDuration = `${Math.random() * 0.4 + 0.3}s`;
     
     button.appendChild(spark);
     
@@ -102,6 +110,7 @@ function generateRandomTank() {
   document.getElementById('nation').value = randomNation;
   document.getElementById('class').value = randomClass;
   document.getElementById('name').value = tankNames[randomNation]?.[Math.floor(Math.random() * tankNames[randomNation].length)] || "Випадковий танк";
+  document.getElementById('year').value = Math.floor(Math.random() * (2023 - 1915 + 1)) + 1915;
   
   updateTankPreview();
 }
@@ -113,6 +122,7 @@ form.addEventListener('submit', function(e) {
   const nation = document.getElementById('nation').value;
   const tankClass = document.getElementById('class').value;
   const name = document.getElementById('name').value;
+  const year = document.getElementById('year').value;
   const modules = document.getElementById('modules').value;
 
   // Початок збирання
@@ -147,6 +157,7 @@ form.addEventListener('submit', function(e) {
       <b>Нація:</b> ${nation}<br>
       <b>Клас:</b> ${tankClass}<br>
       <b>Назва:</b> ${name || "Без назви"}<br>
+      <b>Рік виробництва:</b> ${year || "Невідомо"}<br>
       <b>Модулі:</b><br>${modules.replace(/\n/g, '<br>') || "Немає інформації"}
       <div class="tank-fact">Цікавинка: ${tips[Math.floor(Math.random() * tips.length)]}</div>
     `;
