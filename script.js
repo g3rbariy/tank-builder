@@ -1,8 +1,11 @@
+// Елементи DOM
 const form = document.getElementById('tankForm');
 const output = document.getElementById('output');
-const button = form.querySelector('button');
+const buttons = document.querySelectorAll('button');
 const buildSound = new Audio('build.mp3');
+const completeSound = new Audio('complete.mp3');
 
+// Константи
 const tips = [
   "Порада: ТТ краще використовувати для утримання напрямків",
   "Факт: САУ можуть завдавати урон через всю карту",
@@ -15,7 +18,13 @@ const tankEmojis = {
   "СРСР": { "ТТ": "🇷🇺🐘", "СТ": "🇷🇺⚡", "ПТ-САУ": "🇷🇺🎯", "САУ": "🇷🇺☄️" },
   "Німеччина": { "ТТ": "🇩🇪🦏", "СТ": "🇩🇪🐆", "ПТ-САУ": "🇩🇪🏹", "САУ": "🇩🇪💥" },
   "США": { "ТТ": "🇺🇸🦅", "СТ": "🇺🇸⚡", "ПТ-САУ": "🇺🇸🎯", "САУ": "🇺🇸☄️" },
-  "Франція": { "ТТ": "🇫🇷🐓", "СТ": "🇫🇷🏎", "ПТ-САУ": "🇫🇷🏹", "САУ": "🇫🇷💥" }
+  "Франція": { "ТТ": "🇫🇷🐓", "СТ": "🇫🇷🏎", "ПТ-САУ": "🇫🇷🏹", "САУ": "🇫🇷💥" },
+  "Китай": { "ТТ": "🇨🇳🐉", "СТ": "🇨🇳⚡", "ПТ-САУ": "🇨🇳🎯", "САУ": "🇨🇳☄️" },
+  "Японія": { "ТТ": "🇯🇵🗻", "СТ": "🇯🇵⚡", "ПТ-САУ": "🇯🇵🎯", "САУ": "🇯🇵☄️" },
+  "Італія": { "ТТ": "🇮🇹🍕", "СТ": "🇮🇹🏎", "ПТ-САУ": "🇮🇹🏹", "САУ": "🇮🇹💥" },
+  "Чехія": { "ТТ": "🇨🇿🦁", "СТ": "🇨🇿⚡", "ПТ-САУ": "🇨🇿🎯", "САУ": "🇨🇿☄️" },
+  "Швеція": { "ТТ": "🇸🇪🦌", "СТ": "🇸🇪⚡", "ПТ-САУ": "🇸🇪🎯", "САУ": "🇸🇪☄️" },
+  "Польща": { "ТТ": "🇵🇱🦅", "СТ": "🇵🇱⚡", "ПТ-САУ": "🇵🇱🎯", "САУ": "🇵🇱☄️" }
 };
 
 const tankDescriptions = {
@@ -25,37 +34,93 @@ const tankDescriptions = {
   "САУ": "Арта готова до удару!"
 };
 
-// Випадкова підказка при завантаженні
+const secretCodes = {
+  "idqd": "Безсмертя увімкнено!",
+  "idkfa": "Повне озброєння",
+  "tiger": "Тигр у твоїх руках!"
+};
+
+// Ініціалізація
 document.getElementById('tips').textContent = tips[Math.floor(Math.random() * tips.length)];
 
-// Оновлення прев'ю при зміні класу
-document.getElementById('class').addEventListener('change', function() {
+// Функція для створення іскр
+function createSparks(event) {
+  const button = event.currentTarget;
+  const rect = button.getBoundingClientRect();
+  
+  for (let i = 0; i < 15; i++) {
+    const spark = document.createElement('div');
+    spark.classList.add('spark');
+    
+    const x = event.clientX - rect.left + (Math.random() - 0.5) * 30;
+    const y = event.clientY - rect.top + (Math.random() - 0.5) * 30;
+    
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    spark.style.width = `${Math.random() * 4 + 2}px`;
+    spark.style.height = spark.style.width;
+    spark.style.background = `hsl(${Math.random() * 60 + 20}, 100%, 50%)`;
+    spark.style.animationDuration = `${Math.random() * 0.4 + 0.3}s`;
+    
+    button.appendChild(spark);
+    
+    setTimeout(() => spark.remove(), 500);
+  }
+}
+
+// Оновлення прев'ю танка
+function updateTankPreview() {
   const nation = document.getElementById('nation').value;
-  const tankClass = this.value;
+  const tankClass = document.getElementById('class').value;
+  
   if (nation && tankClass && tankEmojis[nation]?.[tankClass]) {
     document.getElementById('tankModel').textContent = tankEmojis[nation][tankClass];
     document.getElementById('tankDescription').textContent = tankDescriptions[tankClass];
   }
-});
+}
+
+// Генерація випадкового танка
+function generateRandomTank() {
+  const nations = Object.keys(tankEmojis);
+  const classes = Object.keys(tankDescriptions);
+  const tankNames = {
+    "СРСР": ["Т-34", "ІС-7", "КВ-2", "Об'єкт 268"],
+    "Німеччина": ["Tiger II", "Leopard 1", "Maus", "Jagdpanther"],
+    "США": ["Sherman", "Pershing", "T110E5", "T95"],
+    "Франція": ["AMX 50B", "Bat.-Châtillon 25 t", "AMX 13 105", "AMX 50 Foch"],
+    "Китай": ["121", "113", "WZ-111", "Type 5 Heavy"],
+    "Японія": ["Type 5 Heavy", "STB-1", "Type 61", "Ho-Ri"],
+    "Італія": ["Progetto 65", "P.44 Pantera", "Rinoceronte", "Minotauro"],
+    "Чехія": ["TVP T 50/51", "Skoda T 56", "Vz. 55", "ShPTK-TVP 100"],
+    "Швеція": ["Kranvagn", "UDES 15/16", "Strv 103B", "Strv K"],
+    "Польща": ["60TP Lewandowskiego", "CS-63", "50TP Tyszkiewicza", "B.U.G.I."]
+  };
+  
+  const randomNation = nations[Math.floor(Math.random() * nations.length)];
+  const randomClass = classes[Math.floor(Math.random() * classes.length)];
+  
+  document.getElementById('nation').value = randomNation;
+  document.getElementById('class').value = randomClass;
+  document.getElementById('name').value = tankNames[randomNation]?.[Math.floor(Math.random() * tankNames[randomNation].length)] || "Випадковий танк";
+  
+  updateTankPreview();
+}
 
 // Обробка форми
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  // Отримуємо значення
   const nation = document.getElementById('nation').value;
   const tankClass = document.getElementById('class').value;
   const name = document.getElementById('name').value;
   const modules = document.getElementById('modules').value;
 
-  // Ефект "збирання"
-  button.disabled = true;
-  button.innerHTML = 'Збирається... 🔧';
+  // Початок збирання
+  buttons.forEach(btn => btn.disabled = true);
+  form.querySelector('button[type="submit"]').innerHTML = 'Збирається... 🔧';
+  document.querySelector('.container').classList.add('shake');
   buildSound.currentTime = 0;
   buildSound.play();
-
-  // Додаємо ефект трясіння
-  document.querySelector('.container').classList.add('shake');
 
   // Прогрес-бар
   document.getElementById('progressContainer').style.display = 'block';
@@ -63,106 +128,49 @@ form.addEventListener('submit', function(e) {
   let progress = 0;
   const progressInterval = setInterval(() => {
     progress += 5;
-    progressBar.style.width = progress + '%';
+    progressBar.style.width = `${progress}%`;
     if (progress >= 100) clearInterval(progressInterval);
   }, 100);
 
-  // Через 2 секунди - показ результату
+  // Завершення збирання
   setTimeout(() => {
-    // Зупиняємо ефекти
     clearInterval(progressInterval);
     document.querySelector('.container').classList.remove('shake');
     document.getElementById('progressContainer').style.display = 'none';
     progressBar.style.width = '0%';
+    completeSound.play();
 
-    // Показуємо результат
+    // Вивід результату
     output.style.display = 'block';
     output.innerHTML = `
       <strong>✅ Танк зібрано!</strong><br><br>
       <b>Нація:</b> ${nation}<br>
       <b>Клас:</b> ${tankClass}<br>
-      <b>Назва:</b> ${name}<br>
-      <b>Модулі:</b><br>${modules.replace(/\n/g, '<br>')}
-      <div style="margin-top: 15px; font-size: 0.8em;">Цікавинка: ${tips[Math.floor(Math.random()*tips.length)]}</div>
+      <b>Назва:</b> ${name || "Без назви"}<br>
+      <b>Модулі:</b><br>${modules.replace(/\n/g, '<br>') || "Немає інформації"}
+      <div class="tank-fact">Цікавинка: ${tips[Math.floor(Math.random() * tips.length)]}</div>
     `;
 
-    button.disabled = false;
-    button.innerHTML = 'Зібрати танк';
+    buttons.forEach(btn => btn.disabled = false);
+    form.querySelector('button[type="submit"]').innerHTML = 'Зібрати танк';
   }, 2000);
 });
 
-// Випадковий танк
-document.getElementById('randomTank').addEventListener('click', function() {
-  const nations = ["СРСР", "Німеччина", "США", "Франція"];
-  const classes = ["ТТ", "СТ", "ПТ-САУ", "САУ"];
-  const names = {
-    "СРСР": ["Т-34", "ІС-7", "СУ-100", "Об'єкт 268"],
-    "Німеччина": ["Tiger II", "Leopard 1", "Jagdpanther", "GW Tiger"],
-    "США": ["Maus", "Sherman", "T95", "T92 HMC"],
-    "Франція": ["AMX 50B", "Bat.-Châtillon 25 t", "AMX 50 Foch", "Bat.-Châtillon 155"]
-  };
-  
-  const randomNation = nations[Math.floor(Math.random()*nations.length)];
-  const randomClass = classes[Math.floor(Math.random()*classes.length)];
-  
-  document.getElementById('nation').value = randomNation;
-  document.getElementById('class').value = randomClass;
-  document.getElementById('name').value = names[randomNation][Math.floor(Math.random()*names[randomNation].length)];
-  
-  // Оновлюємо прев'ю
-  document.getElementById('class').dispatchEvent(new Event('change'));
-});
+// Події
+document.getElementById('class').addEventListener('change', updateTankPreview);
+document.getElementById('nation').addEventListener('change', updateTankPreview);
+document.getElementById('randomTank').addEventListener('click', generateRandomTank);
+buttons.forEach(btn => btn.addEventListener('mousedown', createSparks));
 
 // Секретні коди
-const secretCodes = {
-  "idqd": "Безсмертя увімкнено!",
-  "idkfa": "Повне озброєння",
-  "tiger": "Тигр у твоїх руках!"
-};
-
 let inputBuffer = "";
 document.addEventListener('keydown', (e) => {
   inputBuffer += e.key.toLowerCase();
   Object.keys(secretCodes).forEach(code => {
     if (inputBuffer.endsWith(code)) {
-      alert(secretCodes[code]);
+      alert(`Секретний код: ${secretCodes[code]}`);
       inputBuffer = "";
     }
   });
   if (inputBuffer.length > 20) inputBuffer = "";
 });
-  // Додаємо цю функцію в будь-яке місце вашого script.js
-function createSparks(event) {
-  const button = event.currentTarget;
-  const rect = button.getBoundingClientRect();
-  
-  // Створюємо 10 іскр
-  for (let i = 0; i < 10; i++) {
-    const spark = document.createElement('div');
-    spark.classList.add('spark');
-    
-    // Випадкові позиції навколо точки кліку
-    const x = event.clientX - rect.left + (Math.random() - 0.5) * 20;
-    const y = event.clientY - rect.top + (Math.random() - 0.5) * 20;
-    
-    spark.style.left = `${x}px`;
-    spark.style.top = `${y}px`;
-    
-    // Випадковий розмір та колір
-    const size = Math.random() * 3 + 2;
-    spark.style.width = `${size}px`;
-    spark.style.height = `${size}px`;
-    spark.style.background = `hsl(${Math.random() * 30 + 30}, 100%, 50%)`;
-    
-    button.appendChild(spark);
-    
-    // Видаляємо іскру після анімації
-    setTimeout(() => {
-      spark.remove();
-    }, 500);
-  }
-}
-
-// Додаємо обробник подій до кнопки
-document.querySelector('button[type="submit"]').addEventListener('mousedown', createSparks);
-document.getElementById('randomTank').addEventListener('mousedown', createSparks);
