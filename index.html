@@ -8,27 +8,21 @@
   <link rel="icon" href="tank_icon.png" type="image/png">
 </head>
 <body>
-
-  <!-- 🎥 Відеофон -->
   <video class="video-bg" autoplay muted loop>
     <source src="wot_background.mp4" type="video/mp4">
     Ваш браузер не підтримує відеофон.
   </video>
 
-  <!-- 📦 Основний контейнер -->
   <div class="container">
     <h2>Конструктор Танків</h2>
     
-    <!-- 🎮 Панель попереднього перегляду -->
     <div id="tankPreview" class="tank-preview">
       <div id="tankModel" class="tank-model">🤖</div>
       <div id="tankDescription" class="tank-description"></div>
     </div>
     
-    <!-- 💡 Випадкова підказка -->
     <div id="tips" class="tips"></div>
     
-    <!-- 📝 Форма створення танка -->
     <form id="tankForm">
       <label for="nation">Нація:</label>
       <select id="nation" required>
@@ -57,6 +51,9 @@
       <label for="name">Назва танка:</label>
       <input type="text" id="name" placeholder="Введіть назву танка" required />
 
+      <label for="year">Рік виробництва:</label>
+      <input type="number" id="year" min="1915" max="2023" placeholder="Введіть рік (1915-2023)">
+
       <label for="modules">Модулі та обладнання:</label>
       <textarea id="modules" rows="4" placeholder="Наприклад: 122-мм гармата Д-25Т, дизельний двигун В-2, броня 120 мм..."></textarea>
 
@@ -66,14 +63,12 @@
       </div>
     </form>
 
-    <!-- 🏗️ Прогрес-бар збирання -->
     <div id="progressContainer" class="progress-container">
       <div class="progress-bar">
         <div id="progressBar" class="progress"></div>
       </div>
     </div>
 
-    <!-- 📊 Результат збирання -->
     <div class="output" id="output"></div>
   </div>
 
